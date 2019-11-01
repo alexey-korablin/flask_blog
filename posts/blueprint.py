@@ -30,11 +30,21 @@ def create_post():
 @posts.route('/')
 def index():
     q = request.args.get('q')
-    if q:
-        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)).all()
+
+    page = request.args.get('page') # в словарь args попадает все что записано в адресной строке после знака ?. Например
+    # в адресе localhost:5000/blog/?page=2 - page=2 будет записан в словарь args как { ..., page: 2, ...}
+    if page and page.isdigit():
+        page = int(page)
     else:
-        posts = Post.query.orderBy(Post.created.desc())
-    return render_template('posts/index.html', posts=posts)
+        page = 1
+
+    if q:
+        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q))
+    else:
+        posts = Post.query.order_by(Post.created.desc())
+
+    pages = posts.paginate(page=page, per_page=5)
+    return render_template('posts/index.html', pages=pages)
 
 
 @posts.route('/<slug>')

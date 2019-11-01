@@ -12,4 +12,4 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)  # корелляция между приложением и БД
 manager = Manager(app)
-manager.add_command('db', MigrateCommand) # кугистрация команды для мграций в консоли
+manager.add_command('db', MigrateCommand) # регистрация команды для миграций в консоли
