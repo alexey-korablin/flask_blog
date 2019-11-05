@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy # реляционная база дан
 # разными БД (postgresql, mongodb и т.д.) для этого нужно изменить только БД и драйвер
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)   # вызов конструктора со значениями __name__, где __name__ - название текущего файла (app.py)
 app.config.from_object(Configuration)   # Запись конфигурации из custom конфигурационного файла
@@ -13,3 +15,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)  # корелляция между приложением и БД
 manager = Manager(app)
 manager.add_command('db', MigrateCommand) # регистрация команды для миграций в консоли
+
+from models import *
+admin = Admin(app)
+admin.add_view(ModelView(Post, db.session))
