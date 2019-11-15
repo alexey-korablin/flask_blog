@@ -47,5 +47,7 @@ class Tag(db.Model):
         self.slug = slugify(self.name)
 
     def __repr__(self):
-        return '<Tag id: {}, name: {}>'.format(self.id, self.name)
+        return '{}'.format(self.name)  # определяет то, как будет выглядеть вывод объекта
+        # в текстовом виде. Например запись '<Tag id: {}, name: {}>'.format(self.id, self.name) выведет: Tag id: 1,
+        # name: flask ; если self.id = 1, self.name = flask
 

@@ -18,4 +18,5 @@ manager.add_command('db', MigrateCommand) # регистрация команд�
 
 from models import *
 admin = Admin(app)
-admin.add_view(ModelView(Post, db.session))
+admin.add_view(ModelView(Post, db.session)) # добавляет меню в админку. ModelView - класс view.py flask
+admin.add_view(ModelView(Tag, db.session))
