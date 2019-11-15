@@ -81,8 +81,32 @@ def ref():
         можно добавить в файле config.py. Для этого достаточно создать константу SECRET_KEY = 'something very secret'
 
 
+    Авторизация. Может быть реализована с помощью расширения flask-security. После установки данного модуля необходимо
+        внести изменения в модель и добавить нужные поля (User и Role). Затем огтразить изменения в БД:
+        >py manage.py db migrate
+        Если миграция прошла успешно, то нужно сделать обновление БД:
+        >py manage.py db upgrade
+        Следующим шагом является создание пользователя. Делается это путем импорта класса SQLAlchemyUserDatastore из
+        flask_security.
+        Создание пользователя может быть выполнено через консоль:
+        >py
+        >>> from app import db
+        >>> from app import user_datastore
+        >>> user_datastore.create_user(email='alex@test.ru', password='admin')
+        >>> db.session.commit()
+        проверка созданного пользователя
+        >>> from models import User
+        >>> user = User.query.first()
+        >>> user.id --> 1
+        >>> user.email --> alex@test.ru
+        Далее нужно ограничить доступ к разделам блогаю. Файл blueprint.py. Делается это с помощью декортатора
+        login_required, который импортируется из flask_security. @login_required - декортатор используется на роутах,
+        где нужно ограничить доступ.
+        Далее нужно создать хэш с помощью bcript
+
     Зависимости:
         flask-admin
+        flask-security
 
     '''
     return True

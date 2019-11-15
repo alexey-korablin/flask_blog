@@ -6,6 +6,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_security import SQLAlchemyUserDatastore, Security
 
 app = Flask(__name__)   # вызов конструктора со значениями __name__, где __name__ - название текущего файла (app.py)
 app.config.from_object(Configuration)   # Запись конфигурации из custom конфигурационного файла
@@ -16,7 +17,12 @@ migrate = Migrate(app, db)  # корелляция между приложени
 manager = Manager(app)
 manager.add_command('db', MigrateCommand) # регистрация команды для миграций в консоли
 
+# Admin
 from models import *
 admin = Admin(app)
 admin.add_view(ModelView(Post, db.session)) # добавляет меню в админку. ModelView - класс view.py flask
 admin.add_view(ModelView(Tag, db.session))
+
+# Flask security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)    # User и Role уже импортированы из models в блоке Admin
+security = Security(app, user_datastore)
